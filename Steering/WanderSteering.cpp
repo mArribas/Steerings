@@ -1,10 +1,8 @@
 #include "WanderSteering.h"
 
 #include "DebugNew.h"
-#include "Entity.h"
 #include "SeekSteering.h"
 
-#include <cmath>
 #include <ctime>
 
 CWanderSteering::CWanderSteering (
@@ -19,14 +17,14 @@ CWanderSteering::CWanderSteering (
     , mRadius        { radius }
     , mDistance      { disntance }
     , mRandomFactor  { randomFactor }
-    , mLimitX        { limitX }
-    , mLimitY        { limitY }
-    , mReferencePoint{referencePoint}
 {
     srand (static_cast<unsigned int>(time (nullptr)));
 
-    mTarget      = new SEntity{};
-    mWanderAngle = 0.f;
+    mTarget         = new SEntity{};
+    mWanderAngle    = 0.f;
+    mLimitX         = limitX;
+    mLimitY         = limitY;
+    mReferencePoint = referencePoint;
 
     mTarget->label       = "TARGET";
     mTarget->position    = mReferencePoint;
@@ -58,21 +56,6 @@ void CWanderSteering::SetWanderAngle (const float wanderAngle)
     mWanderAngle = wanderAngle;
 }
 
-void CWanderSteering::SetLimitX (const float limitX)
-{
-    mLimitX = limitX;
-}
-
-void CWanderSteering::SetLimitY (const float limitY)
-{
-    mLimitY = limitY;
-}
-
-void CWanderSteering::SetReferencePoint (const CVector2D referencePoint)
-{
-    mReferencePoint = referencePoint;
-}
-
 float CWanderSteering::GetRadius (void) const
 {
     return mRadius;
@@ -91,21 +74,6 @@ float CWanderSteering::GetRandomFactor (void) const
 float CWanderSteering::GetWanderAngle (void) const
 {
     return mWanderAngle;
-}
-
-float CWanderSteering::GetLimitX (void) const
-{
-    return mLimitX;
-}
-
-float CWanderSteering::GetLimitY (void) const
-{
-    return mLimitY;
-}
-
-CVector2D CWanderSteering::GetReferencePoint (void) const
-{
-    return mReferencePoint;
 }
 
 ISteering* CWanderSteering::GetSteering (void)
@@ -143,31 +111,8 @@ ISteering* CWanderSteering::GetSteering (void)
 
     delete seek;
 
-    // Check 'x' and 'y' axes limits.
-
-    if (mTarget->position.mX < (mReferencePoint.mX - mLimitX))
-    {
-        mWantedLinearVelocity.mX = abs (mWantedLinearVelocity.mX);
-        mLinearAcceleration.mX   = abs (mLinearAcceleration.mX);
-    }
-
-    if (mTarget->position.mX > (mReferencePoint.mX + mLimitX))
-    {
-        mWantedLinearVelocity.mX = -abs (mWantedLinearVelocity.mX);
-        mLinearAcceleration.mX   = -abs (mLinearAcceleration.mX);
-    }
-
-    if (mTarget->position.mY < (mReferencePoint.mY - mLimitY))
-    {
-        mWantedLinearVelocity.mY = abs (mWantedLinearVelocity.mY);
-        mLinearAcceleration.mY   = abs (mLinearAcceleration.mY);
-    }
-
-    if (mTarget->position.mY > (mReferencePoint.mY + mLimitY))
-    {
-        mWantedLinearVelocity.mY = -abs (mWantedLinearVelocity.mY);
-        mLinearAcceleration.mY   = -abs (mLinearAcceleration.mY);
-    }
+    // Check out of limits.
+    BackIfOutOfLimits (mTarget->position);
 
     return this;
 }
@@ -185,8 +130,16 @@ void CWanderSteering::DrawDebug (void) const
     circleloc *= mDistance;
     circleloc += origin;
 
-    DrawLine           (origin.mX, origin.mY, debugWLV.mX, debugWLV.mY, BLUE);
-    DrawLine           (origin.mX, origin.mY, debugLA.mX, debugLA.mY, RED);
+    DrawLineEx (
+        Vector2{ origin.mX, origin.mY }
+        , Vector2{ debugWLV.mX, debugWLV.mY }
+        , 3.f
+        , BLUE);
+    DrawLineEx (
+        Vector2{ origin.mX, origin.mY }
+        , Vector2{ debugLA.mX, debugLA.mY }
+        , 3.f
+        , RED);
     DrawCircleLines    (circleloc.mX, circleloc.mY, mRadius, DARKGRAY);
     DrawLine           (origin.mX, origin.mY, circleloc.mX, circleloc.mY, GREEN);
     DrawLine           (

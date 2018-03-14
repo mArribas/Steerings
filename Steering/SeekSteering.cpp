@@ -1,7 +1,6 @@
 #include "SeekSteering.h"
 
 #include "DebugNew.h"
-#include "Entity.h"
 
 CSeekSteering::CSeekSteering (SEntity* const owner, const float radius)
     : ISteering{ owner }
@@ -32,7 +31,7 @@ ISteering* CSeekSteering::GetSteering (void)
     mWantedLinearVelocity = mTarget->position - currentPosition;
     mWantedLinearVelocity.Normalize ();
 
-    if (dist > mRadius) mWantedLinearVelocity *= maxLinearVelocity;
+    if (dist > mRadius) mWantedLinearVelocity *= maxLinearVelocity ;
     else                mWantedLinearVelocity  = CVector2D{ 0.f,0.f };
 
     mLinearAcceleration = mWantedLinearVelocity - mOwner->linearVelocity;
@@ -50,8 +49,16 @@ void CSeekSteering::DrawDebug (void) const
     CVector2D debugWLV{ origin + mWantedLinearVelocity };
     CVector2D debugLA { origin + mLinearAcceleration };
 
-    DrawLine        (origin.mX, origin.mY, debugWLV.mX, debugWLV.mY, BLUE);
-    DrawLine        (origin.mX, origin.mY, debugLA.mX, debugLA.mY, RED);
+    DrawLineEx (
+        Vector2{ origin.mX, origin.mY }
+        , Vector2{ debugWLV.mX, debugWLV.mY }
+        , 3.f
+        , BLUE);
+    DrawLineEx (
+        Vector2{ origin.mX, origin.mY }
+        , Vector2{ debugLA.mX, debugLA.mY }
+        , 3.f
+        , RED);
     DrawCircleLines (
         mTarget->position.mX
         , mTarget->position.mY

@@ -4,6 +4,8 @@
 #include "FleeSteering.h"
 #include "ArriveSteering.h"
 #include "WanderSteering.h"
+#include "PursueSteering.h"
+
 
 int main ()
 {
@@ -16,9 +18,10 @@ int main ()
 
     InitWindow (screenWidth, screenHeight, "Wander Steering");
 
+    // ------------------------------------------------------------------------
     SEntity entity;
 
-    entity.label                                     = "STEERING";
+    entity.label                                     = "WANDER";
     entity.position                                  = CVector2D{
         (float)screenWidth / 2, (float)screenHeight / 2 };
     entity.maxLinearVelocity                         = 40.f;
@@ -44,7 +47,39 @@ int main ()
     entity.sprite.tint                               = DARKGOLD;
     entity.radius                                    =
         entity.sprite.spriteSheet.frameWidth * 1.f;
+    // ------------------------------------------------------------------------
 
+    // ------------------------------------------------------------------------
+    SEntity pursuer;
+
+    pursuer.label                                     = "PURSUE";
+    pursuer.position                                  = CVector2D{ 100, 100 };
+    pursuer.maxLinearVelocity                         = 32.f;
+    pursuer.maxLinearAcceleration                     = 15.f;
+    pursuer.maxAngularVelocity                        = 10.f;
+    pursuer.maxAngularAcceleration                    = 5.f;
+    pursuer.sprite.texture                            =
+        LoadTexture ("../Resources/dragon-shape.png");
+    pursuer.sprite.spriteSheet.framesPerRow           = 1;
+    pursuer.sprite.spriteSheet.framesPerColumn        = 1;
+    pursuer.sprite.spriteSheet.frameWidth             =
+        pursuer.sprite.texture.width / pursuer.sprite.spriteSheet.framesPerRow;
+    pursuer.sprite.spriteSheet.frameHeight            =
+        pursuer.sprite.texture.height
+        / pursuer.sprite.spriteSheet.framesPerColumn;
+    pursuer.sprite.spriteSheet.currentFrameRec.x      = 0;
+    pursuer.sprite.spriteSheet.currentFrameRec.y      = 0;
+    pursuer.sprite.spriteSheet.currentFrameRec.width  =
+        pursuer.sprite.spriteSheet.frameWidth;
+    pursuer.sprite.spriteSheet.currentFrameRec.height =
+        pursuer.sprite.spriteSheet.frameHeight;
+    pursuer.sprite.scale                              = 0.5f;
+    pursuer.sprite.tint                               = VIOLET;
+    pursuer.radius                                    =
+        pursuer.sprite.spriteSheet.frameWidth * 1.f;
+    // ------------------------------------------------------------------------
+
+    // ---------------------------Simple target--------------------------------
     SEntity target;
 
     target.label                                     = "TARGET";
@@ -70,6 +105,7 @@ int main ()
         target.sprite.spriteSheet.frameHeight;
     target.sprite.scale                              = 0.5f;
     target.sprite.tint                               = BURGUNDY;
+    // ------------------------------------------------------------------------
 
     //CArriveSteering* steering = new CArriveSteering{ &entity, 60.f };
 
@@ -83,6 +119,15 @@ int main ()
         , 350.f
         , 350.f
         , CVector2D{ 400.f,400.f } };
+
+    CPursueSteering* pursue  = new CPursueSteering{
+        &pursuer
+        , 7.f
+        , 150.f
+        , 150.f
+        , CVector2D{ 400.f,400.f } };
+
+    pursue->SetTarget (&entity);
 
     SetTargetFPS (60);
 
@@ -106,18 +151,28 @@ int main ()
             entity.linearVelocity += linearAcceleration * elapsed;
         }
 
+        if (pursue)
+        {
+            CVector2D linearAcceleration{
+                pursue->GetSteering ()->GetLinearAcceleration () };
+            pursuer.position       += pursuer.linearVelocity * elapsed;
+            pursuer.linearVelocity += linearAcceleration * elapsed;
+        }
         // Draw.
         BeginDrawing ();
 
         ClearBackground (RAYWHITE);
 
         entity.Draw ();
+        pursuer.Draw ();
 
         // Debug.
         steering->DrawDebug ();
+        pursue->DrawDebug ();
         //target.Draw ();
         //target.DrawDebug ();
         entity.DrawDebug ();
+        pursuer.DrawDebug ();
 
         EndDrawing ();
     }

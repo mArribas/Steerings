@@ -1,7 +1,6 @@
 #include "FleeSteering.h"
 
 #include "DebugNew.h"
-#include "Entity.h"
 
 CFleeSteering::CFleeSteering (SEntity* const owner, const float radius)
     : ISteering{ owner }
@@ -33,7 +32,7 @@ ISteering* CFleeSteering::GetSteering (void)
     mWantedLinearVelocity.Normalize ();
 
     if (dist <= mRadius) mWantedLinearVelocity *= maxLinearVelocity;
-    else                 mWantedLinearVelocity = CVector2D{ 0.f,0.f };
+    else                 mWantedLinearVelocity  = CVector2D{ 0.f,0.f };
 
     mLinearAcceleration = mWantedLinearVelocity - mOwner->linearVelocity;
     mLinearAcceleration.Normalize ();
@@ -50,8 +49,16 @@ void CFleeSteering::DrawDebug (void) const
     CVector2D debugWLV{ origin + mWantedLinearVelocity };
     CVector2D debugLA { origin + mLinearAcceleration };
 
-    DrawLine        (origin.mX, origin.mY, debugWLV.mX, debugWLV.mY, BLUE);
-    DrawLine        (origin.mX, origin.mY, debugLA.mX, debugLA.mY, RED);
+    DrawLineEx (
+        Vector2{ origin.mX, origin.mY }
+        , Vector2{ debugWLV.mX, debugWLV.mY }
+        , 3.f
+        , BLUE);
+    DrawLineEx (
+        Vector2{ origin.mX, origin.mY }
+        , Vector2{ debugLA.mX, debugLA.mY }
+        , 3.f
+        , RED);
     DrawCircleLines (
         mTarget->position.mX
         , mTarget->position.mY
