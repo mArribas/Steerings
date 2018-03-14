@@ -13,10 +13,10 @@ CWanderSteering::CWanderSteering (
     const float     limitX,
     const float     limitY,
     const CVector2D referencePoint)
-    : ISteering      { owner }
-    , mRadius        { radius }
-    , mDistance      { disntance }
-    , mRandomFactor  { randomFactor }
+    : ISteering    { owner }
+    , mRadius      { radius }
+    , mDistance    { disntance }
+    , mRandomFactor{ randomFactor }
 {
     srand (static_cast<unsigned int>(time (nullptr)));
 

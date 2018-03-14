@@ -4,7 +4,7 @@
 
 CFleeSteering::CFleeSteering (SEntity* const owner, const float radius)
     : ISteering{ owner }
-    , mRadius{ radius }
+    , mRadius  { radius }
 {
 }
 

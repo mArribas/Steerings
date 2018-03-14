@@ -5,7 +5,7 @@
 #include "ArriveSteering.h"
 #include "WanderSteering.h"
 #include "PursueSteering.h"
-
+#include "EvadeSteering.h"
 
 int main ()
 {
@@ -79,6 +79,36 @@ int main ()
         pursuer.sprite.spriteSheet.frameWidth * 1.f;
     // ------------------------------------------------------------------------
 
+    // ------------------------------------------------------------------------
+    SEntity evader;
+
+    evader.label                                     = "EVADE";
+    evader.position                                  = CVector2D{ 600, 600 };
+    evader.maxLinearVelocity                         = 40.f;
+    evader.maxLinearAcceleration                     = 20.f;
+    evader.maxAngularVelocity                        = 10.f;
+    evader.maxAngularAcceleration                    = 5.f;
+    evader.sprite.texture                            =
+        LoadTexture ("../Resources/dragon-shape.png");
+    evader.sprite.spriteSheet.framesPerRow           = 1;
+    evader.sprite.spriteSheet.framesPerColumn        = 1;
+    evader.sprite.spriteSheet.frameWidth             =
+        evader.sprite.texture.width / evader.sprite.spriteSheet.framesPerRow;
+    evader.sprite.spriteSheet.frameHeight            =
+        evader.sprite.texture.height
+        / evader.sprite.spriteSheet.framesPerColumn;
+    evader.sprite.spriteSheet.currentFrameRec.x      = 0;
+    evader.sprite.spriteSheet.currentFrameRec.y      = 0;
+    evader.sprite.spriteSheet.currentFrameRec.width  =
+        evader.sprite.spriteSheet.frameWidth;
+    evader.sprite.spriteSheet.currentFrameRec.height =
+        evader.sprite.spriteSheet.frameHeight;
+    evader.sprite.scale                              = 0.5f;
+    evader.sprite.tint                               = DARKBLUE;
+    evader.radius                                    =
+        evader.sprite.spriteSheet.frameWidth * 1.f;
+    // ------------------------------------------------------------------------
+
     // ---------------------------Simple target--------------------------------
     SEntity target;
 
@@ -123,11 +153,21 @@ int main ()
     CPursueSteering* pursue  = new CPursueSteering{
         &pursuer
         , 7.f
-        , 150.f
-        , 150.f
+        , 350.f
+        , 350.f
         , CVector2D{ 400.f,400.f } };
 
     pursue->SetTarget (&entity);
+
+    CEvadeSteering* evade = new CEvadeSteering{
+        &evader
+        , 3.f
+        , 160.f
+        , 350.f
+        , 350.f
+        , CVector2D{ 400.f,400.f } };
+
+    evade->SetTarget (&entity);
 
     SetTargetFPS (60);
 
@@ -158,6 +198,15 @@ int main ()
             pursuer.position       += pursuer.linearVelocity * elapsed;
             pursuer.linearVelocity += linearAcceleration * elapsed;
         }
+
+        if (evade)
+        {
+            CVector2D linearAcceleration{
+                evade->GetSteering ()->GetLinearAcceleration () };
+            evader.position += evader.linearVelocity * elapsed;
+            evader.linearVelocity += linearAcceleration * elapsed;
+        }
+
         // Draw.
         BeginDrawing ();
 
@@ -165,14 +214,17 @@ int main ()
 
         entity.Draw ();
         pursuer.Draw ();
+        evader.Draw ();
 
         // Debug.
         steering->DrawDebug ();
         pursue->DrawDebug ();
+        evade->DrawDebug ();
         //target.Draw ();
         //target.DrawDebug ();
         entity.DrawDebug ();
         pursuer.DrawDebug ();
+        evader.DrawDebug ();
 
         EndDrawing ();
     }

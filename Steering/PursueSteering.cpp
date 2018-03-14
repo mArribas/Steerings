@@ -9,7 +9,7 @@ CPursueSteering::CPursueSteering (
     const float     limitX,
     const float     limitY,
     const CVector2D referencePoint)
-    : ISteering{ owner }
+    : ISteering    { owner }
     , mSecondsAhead{ secondsAhead }
 {
     mLimitX = limitX;
@@ -48,11 +48,10 @@ ISteering* CPursueSteering::GetSteering (void)
     mLinearAcceleration   = seek->GetLinearAcceleration ();
 
     delete seek;
+    delete aheadTarget;
 
     // Check out of limits.
     BackIfOutOfLimits (mOwner->position);
-
-    delete aheadTarget;
 
     return this;
 }
