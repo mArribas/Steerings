@@ -34,7 +34,7 @@ float CPursueSteering::GetSecondsAhead (void) const
 ISteering* CPursueSteering::GetSteering (void)
 {
     CVector2D currentPosition{ mOwner->position };
-    SEntity* aheadTarget = new SEntity{};
+    SEntity*  aheadTarget = new SEntity{};
 
     aheadTarget->position =
         mTarget->position

@@ -156,9 +156,14 @@ float CVector2D::Dist (const CVector2D other) const
     return distance.Length ();
 }
 
-float CVector2D::Angle (const CVector2D other) const
+float CVector2D::DegAngle (const CVector2D other) const
 {
     return atan2 (mY - other.mY, other.mX - mX) * 180 / PI;
+}
+
+float CVector2D::RadAngle (const CVector2D other) const
+{
+    return atan2 (mY - other.mY, other.mX - mX);
 }
 
 float CVector2D::Length () const
@@ -176,7 +181,7 @@ void CVector2D::Truncate (const float length)
 
 float CVector2D::Dot (const CVector2D other)const
 {
-    return mX * other.mX + mY * other.mY;
+    return (mX * other.mX) + (mY * other.mY);
 }
 
 float CVector2D::Cross (const CVector2D other) const

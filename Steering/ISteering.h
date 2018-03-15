@@ -11,10 +11,14 @@ class ISteering
 {
 public:
     ISteering (SEntity* const owner)
-        : mOwner         { owner }
-        , mReferencePoint{ 0.f,0.f }
-        , mLimitX        { FLT_MAX }
-        , mLimitY        { FLT_MAX }
+        : mOwner                { owner }
+        , mWantedLinearVelocity { 0.f,0.f }
+        , mLinearAcceleration   { 0.f,0.f }
+        , mWantedAngularVelocity{0.f}
+        , mAngularAcceleration  {0.f}
+        , mReferencePoint       { 0.f,0.f }
+        , mLimitX               { FLT_MAX }
+        , mLimitY               { FLT_MAX }
     {
     }
 

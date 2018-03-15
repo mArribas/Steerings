@@ -34,7 +34,8 @@ public:
     CVector2D& Perpendicular ();
 
     float Dist     (const CVector2D other) const;
-    float Angle    (const CVector2D other) const;
+    float DegAngle (const CVector2D other) const;
+    float RadAngle (const CVector2D other) const;
     float Length   () const;
     void  Truncate (const float length);
 

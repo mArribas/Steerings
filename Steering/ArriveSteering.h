@@ -16,6 +16,6 @@ public:
 
     void DrawDebug (void) const final;
 private:
-    // To know when should the interpolation to the target start.
+    // To know when should the interpolation to the target position start.
     float mRadius;
 };

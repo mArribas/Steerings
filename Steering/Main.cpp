@@ -6,6 +6,7 @@
 #include "WanderSteering.h"
 #include "PursueSteering.h"
 #include "EvadeSteering.h"
+#include "AlignSteering.h"
 
 int main ()
 {
@@ -16,18 +17,18 @@ int main ()
 
     float elapsed{ 0.f };
 
-    InitWindow (screenWidth, screenHeight, "Wander Steering");
+    InitWindow (screenWidth, screenHeight, "Pursue and evade Steerings");
 
     // ------------------------------------------------------------------------
     SEntity entity;
 
-    entity.label                                     = "WANDER";
+    entity.label                                     = "ALIGN";
     entity.position                                  = CVector2D{
         (float)screenWidth / 2, (float)screenHeight / 2 };
     entity.maxLinearVelocity                         = 40.f;
     entity.maxLinearAcceleration                     = 20.f;
-    entity.maxAngularVelocity                        = 10.f;
-    entity.maxAngularAcceleration                    = 5.f;
+    entity.maxAngularVelocity                        = 50.f;
+    entity.maxAngularAcceleration                    = 40.f;
     entity.sprite.texture                            =
         LoadTexture ("../Resources/dragon-shape.png");
     entity.sprite.spriteSheet.framesPerRow           = 1;
@@ -46,7 +47,7 @@ int main ()
     entity.sprite.scale                              = 0.5f;
     entity.sprite.tint                               = DARKGOLD;
     entity.radius                                    =
-        entity.sprite.spriteSheet.frameWidth * 1.f;
+        (entity.sprite.spriteSheet.frameWidth * entity.sprite.scale) / 2;
     // ------------------------------------------------------------------------
 
     // ------------------------------------------------------------------------
@@ -76,7 +77,7 @@ int main ()
     pursuer.sprite.scale                              = 0.5f;
     pursuer.sprite.tint                               = VIOLET;
     pursuer.radius                                    =
-        pursuer.sprite.spriteSheet.frameWidth * 1.f;
+        (pursuer.sprite.spriteSheet.frameWidth * pursuer.sprite.scale) / 2;
     // ------------------------------------------------------------------------
 
     // ------------------------------------------------------------------------
@@ -86,8 +87,8 @@ int main ()
     evader.position                                  = CVector2D{ 600, 600 };
     evader.maxLinearVelocity                         = 40.f;
     evader.maxLinearAcceleration                     = 20.f;
-    evader.maxAngularVelocity                        = 10.f;
-    evader.maxAngularAcceleration                    = 5.f;
+    evader.maxAngularVelocity                        = 50.f;
+    evader.maxAngularAcceleration                    = 20.f;
     evader.sprite.texture                            =
         LoadTexture ("../Resources/dragon-shape.png");
     evader.sprite.spriteSheet.framesPerRow           = 1;
@@ -106,14 +107,14 @@ int main ()
     evader.sprite.scale                              = 0.5f;
     evader.sprite.tint                               = DARKBLUE;
     evader.radius                                    =
-        evader.sprite.spriteSheet.frameWidth * 1.f;
+        (evader.sprite.spriteSheet.frameWidth * evader.sprite.scale) / 2;
     // ------------------------------------------------------------------------
 
     // ---------------------------Simple target--------------------------------
     SEntity target;
 
     target.label                                     = "TARGET";
-    target.position                                  = CVector2D{ 200.f,200.f };
+    target.position                                  = CVector2D{ 200.f,400.f };
     target.maxLinearVelocity                         = 40.f;
     target.maxLinearAcceleration                     = 20.f;
     target.maxAngularVelocity                        = 10.f;
@@ -137,11 +138,11 @@ int main ()
     target.sprite.tint                               = BURGUNDY;
     // ------------------------------------------------------------------------
 
-    //CArriveSteering* steering = new CArriveSteering{ &entity, 60.f };
+    CAlignSteering* steering = new CAlignSteering{ &entity, 5, 1 };
 
-    //steering->SetTarget (&target);
+    steering->SetTarget (&target);
 
-    CWanderSteering* steering = new CWanderSteering{
+    /*CWanderSteering* steering = new CWanderSteering{
         &entity
         , 40.f
         , 100.f
@@ -167,7 +168,7 @@ int main ()
         , 350.f
         , CVector2D{ 400.f,400.f } };
 
-    evade->SetTarget (&entity);
+    evade->SetTarget (&entity);*/
 
     SetTargetFPS (60);
 
@@ -185,18 +186,29 @@ int main ()
         // Update entity.
         if (steering)
         {
+            ISteering* st = steering->GetSteering ();
+
             CVector2D linearAcceleration{
-                steering->GetSteering ()->GetLinearAcceleration () };
+                st->GetLinearAcceleration () };
             entity.position       += entity.linearVelocity * elapsed;
             entity.linearVelocity += linearAcceleration * elapsed;
+
+            float angularAcceleration{
+                st->GetAngularAcceleration () };
+            entity.angle           += entity.angularVelocity * elapsed;
+            entity.angularVelocity += angularAcceleration * elapsed;
+
+            entity.Adjust ();
         }
 
-        if (pursue)
+        /*if (pursue)
         {
             CVector2D linearAcceleration{
                 pursue->GetSteering ()->GetLinearAcceleration () };
             pursuer.position       += pursuer.linearVelocity * elapsed;
             pursuer.linearVelocity += linearAcceleration * elapsed;
+
+            pursuer.Adjust ();
         }
 
         if (evade)
@@ -205,7 +217,9 @@ int main ()
                 evade->GetSteering ()->GetLinearAcceleration () };
             evader.position += evader.linearVelocity * elapsed;
             evader.linearVelocity += linearAcceleration * elapsed;
-        }
+
+            evader.Adjust ();
+        }*/
 
         // Draw.
         BeginDrawing ();
@@ -213,18 +227,18 @@ int main ()
         ClearBackground (RAYWHITE);
 
         entity.Draw ();
-        pursuer.Draw ();
-        evader.Draw ();
+        //pursuer.Draw ();
+        //evader.Draw ();
 
         // Debug.
         steering->DrawDebug ();
-        pursue->DrawDebug ();
-        evade->DrawDebug ();
-        //target.Draw ();
-        //target.DrawDebug ();
+        //pursue->DrawDebug ();
+        //evade->DrawDebug ();
+        target.Draw ();
+        target.DrawDebug ();
         entity.DrawDebug ();
-        pursuer.DrawDebug ();
-        evader.DrawDebug ();
+        //pursuer.DrawDebug ();
+        //evader.DrawDebug ();
 
         EndDrawing ();
     }

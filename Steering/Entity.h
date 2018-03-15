@@ -49,6 +49,24 @@ struct SEntity
         UnloadTexture (sprite.texture);
     }
 
+    void Adjust (void)
+    {
+        if (linearVelocity.mX > maxLinearVelocity)
+        {
+            linearVelocity.mX = maxLinearVelocity;
+        }
+
+        if (linearVelocity.mY > maxLinearVelocity)
+        {
+            linearVelocity.mY = maxLinearVelocity;
+        }
+
+        if (angularVelocity > maxAngularVelocity)
+        {
+            angularVelocity  = maxAngularVelocity;
+        }
+    }
+
     void Draw (void) const
     {
         // Destination rectangle (screen rectangle where drawing part of
@@ -74,7 +92,7 @@ struct SEntity
             , sprite.spriteSheet.currentFrameRec
             , destRec
             , origin
-            , 0
+            , -angle
             , sprite.tint);
     }
 
@@ -99,11 +117,14 @@ struct SEntity
     }
 
     char*     label                 {"ENTITY"};
+    // Current position in the screen.
     CVector2D position              { 0.f,0.f };
     CVector2D linearVelocity        { 0.f,0.f };
     float     maxLinearVelocity     { 0.f };
     float     maxLinearAcceleration { 0.f };
-    float     angularSpeed          { 0.f };
+    // Current angle in degrees.
+    float     angle                 { 0.f };
+    float     angularVelocity       { 0.f };
     float     maxAngularVelocity    { 0.f };
     float     maxAngularAcceleration{ 0.f };
     float     targetRotation        { 0.f };
