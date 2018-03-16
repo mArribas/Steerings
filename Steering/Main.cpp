@@ -7,6 +7,7 @@
 #include "PursueSteering.h"
 #include "EvadeSteering.h"
 #include "AlignSteering.h"
+#include "PathFolllowingSteering.h"
 
 int main ()
 {
@@ -22,9 +23,8 @@ int main ()
     // ------------------------------------------------------------------------
     SEntity entity;
 
-    entity.label                                     = "ALIGN";
-    entity.position                                  = CVector2D{
-        (float)screenWidth / 2, (float)screenHeight / 2 };
+    entity.label                                     = "FOLLOWING";
+    entity.position                                  = CVector2D{ 0, 100 };
     entity.maxLinearVelocity                         = 40.f;
     entity.maxLinearAcceleration                     = 20.f;
     entity.maxAngularVelocity                        = 50.f;
@@ -138,9 +138,33 @@ int main ()
     target.sprite.tint                               = BURGUNDY;
     // ------------------------------------------------------------------------
 
-    CAlignSteering* steering = new CAlignSteering{ &entity, 5, 1 };
+    // ------------------------------Path--------------------------------------
+    Path path;
 
-    steering->SetTarget (&target);
+    SEntity node1;
+    SEntity node2;
+    SEntity node3;
+    SEntity node4;
+    SEntity node5;
+
+    node1.position = CVector2D{ 50, 100 };
+    node2.position = CVector2D{ 100, 300 };
+    node3.position = CVector2D{ 300, 300 };
+    node4.position = CVector2D{ 300, 500 };
+    node5.position = CVector2D{ 600, 600 };
+
+    path.push_back (&node1);
+    path.push_back (&node2);
+    path.push_back (&node3);
+    path.push_back (&node4);
+    path.push_back (&node5);
+    // ------------------------------------------------------------------------
+
+    //CAlignSteering* steering = new CAlignSteering{ &entity, 5, 1 };
+
+    //steering->SetTarget (&target);
+
+    CPathFolllowingSteering* steering = new CPathFolllowingSteering{ &entity, path, 2.f };
 
     /*CWanderSteering* steering = new CWanderSteering{
         &entity
@@ -234,8 +258,8 @@ int main ()
         steering->DrawDebug ();
         //pursue->DrawDebug ();
         //evade->DrawDebug ();
-        target.Draw ();
-        target.DrawDebug ();
+        //target.Draw ();
+        //target.DrawDebug ();
         entity.DrawDebug ();
         //pursuer.DrawDebug ();
         //evader.DrawDebug ();
