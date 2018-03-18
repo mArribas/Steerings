@@ -109,7 +109,7 @@ struct SEntity
         DrawText (
             label
             , position.mX - (sprite.spriteSheet.frameWidth / 7)
-            , position.mY + (sprite.spriteSheet.frameHeight / 3)
+            , position.mY - (sprite.spriteSheet.frameHeight / 3)
             , 10
             , sprite.tint);
 

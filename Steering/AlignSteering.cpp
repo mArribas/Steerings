@@ -44,8 +44,7 @@ ISteering* CAlignSteering::GetSteering (void)
     float maxAngularVelocity    {
         WrapRad (TORAD (mOwner->maxAngularVelocity)) };
     float maxAngularAcceleration{
-        WrapRad (TORAD(mOwner->maxAngularAcceleration)) };
-    float angularVelocity       { mOwner->angularVelocity };
+        WrapRad (TORAD (mOwner->maxAngularAcceleration)) };
     float rotation              { 0.0f };
     float rotationSize          { 0.0f };
 
@@ -82,7 +81,7 @@ ISteering* CAlignSteering::GetSteering (void)
     mWantedAngularVelocity *= rotation / rotationSize;
 
     mAngularAcceleration =
-        mWantedAngularVelocity - WrapRad (TORAD (angularVelocity));
+        mWantedAngularVelocity - WrapRad (TORAD (mOwner->angularVelocity));
 
     if (mAngularAcceleration > maxAngularAcceleration)
     {
@@ -108,28 +107,28 @@ void CAlignSteering::DrawDebug (void) const
     DrawLineEx (
         Vector2{ mOwner->position.mX, mOwner->position.mY }
         , Vector2{ mOwner->position.mX + (60.f * cos (TORAD (0)))
-            , mOwner->position.mX + (60.f * sin (TORAD (0))) }
+            , mOwner->position.mY + (60.f * sin (TORAD (0))) }
         , 3.f
         , RED);
     DrawLineEx (
         Vector2{ mOwner->position.mX, mOwner->position.mY }
         , Vector2{ mOwner->position.mX + (60.f * cos (TORAD (90)))
-            , mOwner->position.mX + (60.f * sin (TORAD (90))) }
+            , mOwner->position.mY + (60.f * sin (TORAD (90))) }
         , 3.f
         , BLUE);
     DrawLineEx (
         Vector2{ mOwner->position.mX, mOwner->position.mY }
         , Vector2{ mOwner->position.mX + (60.f * cos (TORAD (180)))
-            , mOwner->position.mX + (60.f * sin (TORAD (180))) }
+            , mOwner->position.mY + (60.f * sin (TORAD (180))) }
         , 3.f
         , YELLOW);
     DrawLineEx (
         Vector2{ mOwner->position.mX, mOwner->position.mY }
         , Vector2{ mOwner->position.mX + (60.f * cos (TORAD (270)))
-            , mOwner->position.mX + (60.f * sin (TORAD (270))) }
+            , mOwner->position.mY + (60.f * sin (TORAD (270))) }
         , 3.f
         , GREEN);
-    DrawLineV (
+    DrawLineV  (
         Vector2{ mOwner->position.mX,  mOwner->position.mY }
         , Vector2{ mTarget->position.mX, mTarget->position.mY }
         , BURGUNDY);
@@ -151,8 +150,8 @@ float CAlignSteering::WrapDeg (float angle)
 {
     while (angle < 0.0f || angle > 360.f)
     {
-        if      (angle > 360) angle -= 360.0f;
-        else if (angle < 0)   angle += 360.0f;
+        if      (angle > 360.f) angle -= 360.0f;
+        else if (angle < 0.f)   angle += 360.0f;
     }
 
     return angle;

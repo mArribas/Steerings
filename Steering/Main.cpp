@@ -8,6 +8,7 @@
 #include "EvadeSteering.h"
 #include "AlignSteering.h"
 #include "PathFolllowingSteering.h"
+#include "ObstacleAvoidanceSteering.h"
 
 int main ()
 {
@@ -18,13 +19,13 @@ int main ()
 
     float elapsed{ 0.f };
 
-    InitWindow (screenWidth, screenHeight, "Pursue and evade Steerings");
+    InitWindow (screenWidth, screenHeight, "C++ STEERINGS");
 
     // ------------------------------------------------------------------------
     SEntity entity;
 
-    entity.label                                     = "FOLLOWING";
-    entity.position                                  = CVector2D{ 0, 100 };
+    entity.label                                     = "ARRIVE";
+    entity.position                                  = CVector2D{ 100, 100 };
     entity.maxLinearVelocity                         = 40.f;
     entity.maxLinearAcceleration                     = 20.f;
     entity.maxAngularVelocity                        = 50.f;
@@ -48,6 +49,66 @@ int main ()
     entity.sprite.tint                               = DARKGOLD;
     entity.radius                                    =
         (entity.sprite.spriteSheet.frameWidth * entity.sprite.scale) / 2;
+    // ------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------
+    SEntity seeker;
+
+    seeker.label                                     = "SEEK";
+    seeker.position                                  = CVector2D{ 400, 600 };
+    seeker.maxLinearVelocity                         = 40.f;
+    seeker.maxLinearAcceleration                     = 20.f;
+    seeker.maxAngularVelocity                        = 50.f;
+    seeker.maxAngularAcceleration                    = 40.f;
+    seeker.sprite.texture                            =
+        LoadTexture ("../Resources/dragon-shape.png");
+    seeker.sprite.spriteSheet.framesPerRow           = 1;
+    seeker.sprite.spriteSheet.framesPerColumn        = 1;
+    seeker.sprite.spriteSheet.frameWidth             =
+        seeker.sprite.texture.width / seeker.sprite.spriteSheet.framesPerRow;
+    seeker.sprite.spriteSheet.frameHeight            =
+        seeker.sprite.texture.height
+        / seeker.sprite.spriteSheet.framesPerColumn;
+    seeker.sprite.spriteSheet.currentFrameRec.x      = 0;
+    seeker.sprite.spriteSheet.currentFrameRec.y      = 0;
+    seeker.sprite.spriteSheet.currentFrameRec.width  =
+        seeker.sprite.spriteSheet.frameWidth;
+    seeker.sprite.spriteSheet.currentFrameRec.height =
+        seeker.sprite.spriteSheet.frameHeight;
+    seeker.sprite.scale                              = 0.5f;
+    seeker.sprite.tint                               = VIOLET;
+    seeker.radius                                    =
+        (seeker.sprite.spriteSheet.frameWidth * seeker.sprite.scale) / 2;
+    // ------------------------------------------------------------------------
+
+    // ------------------------------------------------------------------------
+    SEntity fleer;
+
+    fleer.label                                     = "FLEE";
+    fleer.position                                  = CVector2D{ 600, 100 };
+    fleer.maxLinearVelocity                         = 40.f;
+    fleer.maxLinearAcceleration                     = 20.f;
+    fleer.maxAngularVelocity                        = 50.f;
+    fleer.maxAngularAcceleration                    = 40.f;
+    fleer.sprite.texture                            =
+        LoadTexture ("../Resources/dragon-shape.png");
+    fleer.sprite.spriteSheet.framesPerRow           = 1;
+    fleer.sprite.spriteSheet.framesPerColumn        = 1;
+    fleer.sprite.spriteSheet.frameWidth             =
+        fleer.sprite.texture.width / fleer.sprite.spriteSheet.framesPerRow;
+    fleer.sprite.spriteSheet.frameHeight            =
+        fleer.sprite.texture.height
+        / fleer.sprite.spriteSheet.framesPerColumn;
+    fleer.sprite.spriteSheet.currentFrameRec.x      = 0;
+    fleer.sprite.spriteSheet.currentFrameRec.y      = 0;
+    fleer.sprite.spriteSheet.currentFrameRec.width  =
+        fleer.sprite.spriteSheet.frameWidth;
+    fleer.sprite.spriteSheet.currentFrameRec.height =
+        fleer.sprite.spriteSheet.frameHeight;
+    fleer.sprite.scale                              = 0.5f;
+    fleer.sprite.tint                               = SKYBLUE;
+    fleer.radius                                    =
+        (fleer.sprite.spriteSheet.frameWidth * fleer.sprite.scale) / 2;
     // ------------------------------------------------------------------------
 
     // ------------------------------------------------------------------------
@@ -115,8 +176,8 @@ int main ()
 
     target.label                                     = "TARGET";
     target.position                                  = CVector2D{ 200.f,400.f };
-    target.maxLinearVelocity                         = 40.f;
-    target.maxLinearAcceleration                     = 20.f;
+    target.maxLinearVelocity                         = 80.f;
+    target.maxLinearAcceleration                     = 80.f;
     target.maxAngularVelocity                        = 10.f;
     target.maxAngularAcceleration                    = 5.f;
     target.sprite.texture                            =
@@ -139,7 +200,7 @@ int main ()
     // ------------------------------------------------------------------------
 
     // ------------------------------Path--------------------------------------
-    Path path;
+    /*Path path;
 
     SEntity node1;
     SEntity node2;
@@ -153,24 +214,50 @@ int main ()
     node4.position = CVector2D{ 300, 500 };
     node5.position = CVector2D{ 600, 600 };
 
-    path.push_back (&node1);
-    path.push_back (&node2);
-    path.push_back (&node3);
-    path.push_back (&node4);
-    path.push_back (&node5);
+    path.push_back (std::make_pair (&node1, false));
+    path.push_back (std::make_pair (&node2, false));
+    path.push_back (std::make_pair (&node3, false));
+    path.push_back (std::make_pair (&node4, false));
+    path.push_back (std::make_pair (&node5, false));
+    // ------------------------------------------------------------------------
+
+    // ---------------------------Obstacles------------------------------------
+    Obstacles obstacles;
+
+    SEntity obstacle1;
+    SEntity obstacle2;
+
+    obstacle1.position = CVector2D{ 310, 400 };
+    obstacle1.radius = 20.f;
+    obstacle2.position = CVector2D{ 200, 320 };
+    obstacle2.radius = 15.f;
+
+    obstacles.push_back (&obstacle1);
+    obstacles.push_back (&obstacle2);*/
     // ------------------------------------------------------------------------
 
     //CAlignSteering* steering = new CAlignSteering{ &entity, 5, 1 };
+    CArriveSteering* steering = new CArriveSteering{ &entity, 60.f };
+    steering->SetTarget (&target);
 
-    //steering->SetTarget (&target);
+    CSeekSteering* seek = new CSeekSteering{ &seeker, 60.f };
+    seek->SetTarget (&target);
 
-    CPathFolllowingSteering* steering = new CPathFolllowingSteering{ &entity, path, 2.f };
+    CFleeSteering* flee = new CFleeSteering{ &fleer, 160.f };
+    flee->SetTarget (&target);
+
+    /*CPathFolllowingSteering* steering =
+        new CPathFolllowingSteering{ &entity, path, 1.8f, 10.f };
+    CObstacleAvoidanceSteering* avoidObstacles =
+        new CObstacleAvoidanceSteering{ &entity, obstacles, 4.f, 1.f };*/
+
+    bool checkObstacles = false;
 
     /*CWanderSteering* steering = new CWanderSteering{
         &entity
         , 40.f
         , 100.f
-        , 3.f
+        , 20.f
         , 350.f
         , 350.f
         , CVector2D{ 400.f,400.f } };
@@ -208,7 +295,7 @@ int main ()
         if (target.position.mY != mouseY) target.position.mY = mouseY * 1.f;
 
         // Update entity.
-        if (steering)
+        if (steering && !checkObstacles)
         {
             ISteering* st = steering->GetSteering ();
 
@@ -223,6 +310,41 @@ int main ()
             entity.angularVelocity += angularAcceleration * elapsed;
 
             entity.Adjust ();
+            //checkObstacles = true;
+        }
+
+        /*if (avoidObstacles && checkObstacles)
+        {
+            ISteering* st = avoidObstacles->GetSteering ();
+
+            CVector2D linearAcceleration{
+                st->GetLinearAcceleration () };
+            entity.position       += entity.linearVelocity * elapsed;
+            entity.linearVelocity += linearAcceleration * elapsed;
+
+            entity.Adjust ();
+            if (linearAcceleration.mX == 0 && linearAcceleration.mY == 0)
+                checkObstacles = false;
+        }*/
+
+        if (seek)
+        {
+            CVector2D linearAcceleration{
+                seek->GetSteering ()->GetLinearAcceleration () };
+            seeker.position += seeker.linearVelocity * elapsed;
+            seeker.linearVelocity += linearAcceleration * elapsed;
+
+            seeker.Adjust ();
+        }
+
+        if (flee)
+        {
+            CVector2D linearAcceleration{
+                flee->GetSteering ()->GetLinearAcceleration () };
+            fleer.position += fleer.linearVelocity * elapsed;
+            fleer.linearVelocity += linearAcceleration * elapsed;
+
+            fleer.Adjust ();
         }
 
         /*if (pursue)
@@ -250,19 +372,27 @@ int main ()
 
         ClearBackground (RAYWHITE);
 
-        entity.Draw ();
-        //pursuer.Draw ();
-        //evader.Draw ();
-
         // Debug.
+        //avoidObstacles->DrawDebug ();
         steering->DrawDebug ();
+        seek->DrawDebug ();
+        flee->DrawDebug ();
         //pursue->DrawDebug ();
         //evade->DrawDebug ();
-        //target.Draw ();
-        //target.DrawDebug ();
+        target.DrawDebug ();
         entity.DrawDebug ();
+        seeker.DrawDebug ();
+        fleer.DrawDebug ();
         //pursuer.DrawDebug ();
         //evader.DrawDebug ();
+
+        // Entities.
+        entity.Draw ();
+        target.Draw ();
+        seeker.Draw ();
+        fleer.Draw ();
+        //pursuer.Draw ();
+        //evader.Draw ();
 
         EndDrawing ();
     }

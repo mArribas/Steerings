@@ -3,7 +3,7 @@
 class CEvadeSteering : public ISteering
 {
 public:
-    CEvadeSteering (
+    CEvadeSteering  (
         SEntity* const  owner,
         const float     secondsAhead,
         const float     radius,
@@ -24,6 +24,6 @@ public:
 private:
     // Defines how far the prediction will go.
     float mSecondsAhead;
-    // To know when should flee.
+    // To know when should evade.
     float mRadius;
 };

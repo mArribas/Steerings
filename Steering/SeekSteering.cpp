@@ -24,17 +24,15 @@ float CSeekSteering::GetRadius (void) const
 
 ISteering* CSeekSteering::GetSteering (void)
 {
-    CVector2D currentPosition  { mOwner->position };
-    float     maxLinearVelocity{ mOwner->maxLinearVelocity };
-    float     dist             { mTarget->position.Dist (currentPosition) };
+    float dist{ mTarget->position.Dist (mOwner->position) };
 
-    mWantedLinearVelocity = mTarget->position - currentPosition;
+    mWantedLinearVelocity = mTarget->position - mOwner->position;
     mWantedLinearVelocity.Normalize ();
 
-    if (dist > mRadius) mWantedLinearVelocity *= maxLinearVelocity ;
+    if (dist > mRadius) mWantedLinearVelocity *= mOwner->maxLinearVelocity;
     else                mWantedLinearVelocity  = CVector2D{ 0.f,0.f };
 
-    mLinearAcceleration = mWantedLinearVelocity - mOwner->linearVelocity;
+    mLinearAcceleration  = mWantedLinearVelocity - mOwner->linearVelocity;
     mLinearAcceleration.Normalize ();
     mLinearAcceleration *= mOwner->maxLinearAcceleration;
 
@@ -45,17 +43,16 @@ void CSeekSteering::DrawDebug (void) const
 {
 #pragma warning(push)
 #pragma warning(disable: 4244)
-    CVector2D origin  { mOwner->position };
-    CVector2D debugWLV{ origin + mWantedLinearVelocity };
-    CVector2D debugLA { origin + mLinearAcceleration };
+    CVector2D debugWLV{ mOwner->position + mWantedLinearVelocity };
+    CVector2D debugLA { mOwner->position + mLinearAcceleration };
 
-    DrawLineEx (
-        Vector2{ origin.mX, origin.mY }
+    DrawLineEx      (
+        Vector2{ mOwner->position.mX, mOwner->position.mY }
         , Vector2{ debugWLV.mX, debugWLV.mY }
         , 3.f
         , BLUE);
-    DrawLineEx (
-        Vector2{ origin.mX, origin.mY }
+    DrawLineEx      (
+        Vector2{ mOwner->position.mX, mOwner->position.mY }
         , Vector2{ debugLA.mX, debugLA.mY }
         , 3.f
         , RED);

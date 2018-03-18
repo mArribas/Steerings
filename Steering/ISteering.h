@@ -101,25 +101,25 @@ protected:
     // faces the region.
     void BackIfOutOfLimits (const CVector2D position)
     {
-        if (position.mX < (mReferencePoint.mX - mLimitX))
+        if ((position.mX - mOwner->radius) < (mReferencePoint.mX - mLimitX))
         {
             mWantedLinearVelocity.mX = abs (mWantedLinearVelocity.mX);
             mLinearAcceleration.mX   = abs (mLinearAcceleration.mX);
         }
 
-        if (position.mX > (mReferencePoint.mX + mLimitX))
+        if ((position.mX + mOwner->radius) > (mReferencePoint.mX + mLimitX))
         {
             mWantedLinearVelocity.mX = -abs (mWantedLinearVelocity.mX);
             mLinearAcceleration.mX   = -abs (mLinearAcceleration.mX);
         }
 
-        if (position.mY < (mReferencePoint.mY - mLimitY))
+        if ((position.mY - mOwner->radius) < (mReferencePoint.mY - mLimitY))
         {
             mWantedLinearVelocity.mY = abs (mWantedLinearVelocity.mY);
             mLinearAcceleration.mY   = abs (mLinearAcceleration.mY);
         }
 
-        if (position.mY > (mReferencePoint.mY + mLimitY))
+        if ((position.mY + mOwner->radius) > (mReferencePoint.mY + mLimitY))
         {
             mWantedLinearVelocity.mY = -abs (mWantedLinearVelocity.mY);
             mLinearAcceleration.mY   = -abs (mLinearAcceleration.mY);

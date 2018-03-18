@@ -5,7 +5,7 @@
 class CPursueSteering : public ISteering
 {
 public:
-    CPursueSteering (
+    CPursueSteering  (
         SEntity* const  owner,
         const float     secondsAhead,
         const float     limitX,

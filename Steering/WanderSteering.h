@@ -33,7 +33,7 @@ private:
     float mRadius;
     // Distance from the owner to the center of the circle used to wander.
     float mDistance;
-    // Random factor used to modify the wander angle.
+    // Random factor used to modify the wander angle (in degrees).
     float mRandomFactor;
     // Defines how big the offset to the target is.
     float mWanderAngle;
