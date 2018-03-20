@@ -13,19 +13,19 @@
 int main ()
 {
     int screenWidth { 800 };
-    int screenHeight{ 800 };
+    int screenHeight{ 400 };
     int mouseX      { 0 };
     int mouseY      { 0 };
 
     float elapsed{ 0.f };
 
-    InitWindow (screenWidth, screenHeight, "C++ STEERINGS");
+    InitWindow (screenWidth, screenHeight, "C++ STEERING BEHAVIORS");
 
     // ------------------------------------------------------------------------
     SEntity entity;
 
-    entity.label                                     = "ARRIVE";
-    entity.position                                  = CVector2D{ 100, 100 };
+    entity.label                                     = "ALIGN";
+    entity.position                                  = CVector2D{ 400.f, 200.f };
     entity.maxLinearVelocity                         = 40.f;
     entity.maxLinearAcceleration                     = 20.f;
     entity.maxAngularVelocity                        = 50.f;
@@ -55,7 +55,7 @@ int main ()
     SEntity seeker;
 
     seeker.label                                     = "SEEK";
-    seeker.position                                  = CVector2D{ 400, 600 };
+    seeker.position                                  = CVector2D{ 400.f, 100.f };
     seeker.maxLinearVelocity                         = 40.f;
     seeker.maxLinearAcceleration                     = 20.f;
     seeker.maxAngularVelocity                        = 50.f;
@@ -85,7 +85,7 @@ int main ()
     SEntity fleer;
 
     fleer.label                                     = "FLEE";
-    fleer.position                                  = CVector2D{ 600, 100 };
+    fleer.position                                  = CVector2D{ 200.f, 100.f };
     fleer.maxLinearVelocity                         = 40.f;
     fleer.maxLinearAcceleration                     = 20.f;
     fleer.maxAngularVelocity                        = 50.f;
@@ -115,7 +115,7 @@ int main ()
     SEntity pursuer;
 
     pursuer.label                                     = "PURSUE";
-    pursuer.position                                  = CVector2D{ 100, 100 };
+    pursuer.position                                  = CVector2D{ 700.f, 300.f };
     pursuer.maxLinearVelocity                         = 32.f;
     pursuer.maxLinearAcceleration                     = 15.f;
     pursuer.maxAngularVelocity                        = 10.f;
@@ -145,7 +145,7 @@ int main ()
     SEntity evader;
 
     evader.label                                     = "EVADE";
-    evader.position                                  = CVector2D{ 600, 600 };
+    evader.position                                  = CVector2D{ 400.f, 200.f };
     evader.maxLinearVelocity                         = 40.f;
     evader.maxLinearAcceleration                     = 20.f;
     evader.maxAngularVelocity                        = 50.f;
@@ -208,11 +208,11 @@ int main ()
     SEntity node4;
     SEntity node5;
 
-    node1.position = CVector2D{ 50, 100 };
-    node2.position = CVector2D{ 100, 300 };
-    node3.position = CVector2D{ 300, 300 };
-    node4.position = CVector2D{ 300, 500 };
-    node5.position = CVector2D{ 600, 600 };
+    node1.position = CVector2D{ 100.f, 100.f };
+    node2.position = CVector2D{ 150.f, 200.f };
+    node3.position = CVector2D{ 350.f, 200.f };
+    node4.position = CVector2D{ 350.f, 300.f };
+    node5.position = CVector2D{ 650.f, 350.f };
 
     path.push_back (std::make_pair (&node1, false));
     path.push_back (std::make_pair (&node2, false));
@@ -227,27 +227,27 @@ int main ()
     SEntity obstacle1;
     SEntity obstacle2;
 
-    obstacle1.position = CVector2D{ 310, 400 };
+    obstacle1.position = CVector2D{ 250.f, 200.f };
     obstacle1.radius = 20.f;
-    obstacle2.position = CVector2D{ 200, 320 };
+    obstacle2.position = CVector2D{ 350.f, 250.f };
     obstacle2.radius = 15.f;
 
     obstacles.push_back (&obstacle1);
     obstacles.push_back (&obstacle2);*/
     // ------------------------------------------------------------------------
 
-    //CAlignSteering* steering = new CAlignSteering{ &entity, 5, 1 };
-    CArriveSteering* steering = new CArriveSteering{ &entity, 60.f };
+    CAlignSteering* steering = new CAlignSteering{ &entity, 5, 1 };
+    //CArriveSteering* steering = new CArriveSteering{ &entity, 60.f };
     steering->SetTarget (&target);
 
-    CSeekSteering* seek = new CSeekSteering{ &seeker, 60.f };
+    /*CSeekSteering* seek = new CSeekSteering{ &seeker, 60.f };
     seek->SetTarget (&target);
 
     CFleeSteering* flee = new CFleeSteering{ &fleer, 160.f };
-    flee->SetTarget (&target);
+    flee->SetTarget (&target);*/
 
     /*CPathFolllowingSteering* steering =
-        new CPathFolllowingSteering{ &entity, path, 1.8f, 10.f };
+        new CPathFolllowingSteering{ &entity, path, 1.f, 2.f };
     CObstacleAvoidanceSteering* avoidObstacles =
         new CObstacleAvoidanceSteering{ &entity, obstacles, 4.f, 1.f };*/
 
@@ -258,16 +258,16 @@ int main ()
         , 40.f
         , 100.f
         , 20.f
-        , 350.f
-        , 350.f
-        , CVector2D{ 400.f,400.f } };
+        , screenWidth / 2.5f
+        , screenHeight / 2.5f
+        , CVector2D{ screenWidth / 2.f,screenHeight / 2.f } };
 
     CPursueSteering* pursue  = new CPursueSteering{
         &pursuer
-        , 7.f
-        , 350.f
-        , 350.f
-        , CVector2D{ 400.f,400.f } };
+        , 4.f
+        , screenWidth / 2.5f
+        , screenHeight / 2.5f
+        , CVector2D{ screenWidth / 2.f,screenHeight / 2.f } };
 
     pursue->SetTarget (&entity);
 
@@ -275,9 +275,9 @@ int main ()
         &evader
         , 3.f
         , 160.f
-        , 350.f
-        , 350.f
-        , CVector2D{ 400.f,400.f } };
+        , screenWidth / 2.5f
+        , screenHeight / 2.5f
+        , CVector2D{ screenWidth / 2.f,screenHeight / 2.f } };
 
     evade->SetTarget (&entity);*/
 
@@ -327,7 +327,7 @@ int main ()
                 checkObstacles = false;
         }*/
 
-        if (seek)
+        /*if (seek)
         {
             CVector2D linearAcceleration{
                 seek->GetSteering ()->GetLinearAcceleration () };
@@ -345,7 +345,7 @@ int main ()
             fleer.linearVelocity += linearAcceleration * elapsed;
 
             fleer.Adjust ();
-        }
+        }*/
 
         /*if (pursue)
         {
@@ -375,22 +375,22 @@ int main ()
         // Debug.
         //avoidObstacles->DrawDebug ();
         steering->DrawDebug ();
-        seek->DrawDebug ();
-        flee->DrawDebug ();
+        //seek->DrawDebug ();
+        //flee->DrawDebug ();
         //pursue->DrawDebug ();
         //evade->DrawDebug ();
         target.DrawDebug ();
         entity.DrawDebug ();
-        seeker.DrawDebug ();
-        fleer.DrawDebug ();
+        //seeker.DrawDebug ();
+        //fleer.DrawDebug ();
         //pursuer.DrawDebug ();
         //evader.DrawDebug ();
 
         // Entities.
         entity.Draw ();
         target.Draw ();
-        seeker.Draw ();
-        fleer.Draw ();
+        //seeker.Draw ();
+        //fleer.Draw ();
         //pursuer.Draw ();
         //evader.Draw ();
 

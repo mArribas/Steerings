@@ -126,19 +126,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlignSteering.cpp" />
     <ClCompile Include="ArriveSteering.cpp" />
+    <ClCompile Include="EvadeSteering.cpp" />
     <ClCompile Include="FleeSteering.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ObstacleAvoidanceSteering.cpp" />
+    <ClCompile Include="PathFolllowingSteering.cpp" />
+    <ClCompile Include="PursueSteering.cpp" />
     <ClCompile Include="SeekSteering.cpp" />
     <ClCompile Include="Vector2D.cpp" />
     <ClCompile Include="WanderSteering.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AlignSteering.h" />
     <ClInclude Include="ArriveSteering.h" />
     <ClInclude Include="DebugNew.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EvadeSteering.h" />
     <ClInclude Include="FleeSteering.h" />
     <ClInclude Include="ISteering.h" />
+    <ClInclude Include="ObstacleAvoidanceSteering.h" />
+    <ClInclude Include="PathFolllowingSteering.h" />
+    <ClInclude Include="PursueSteering.h" />
     <ClInclude Include="SeekSteering.h" />
     <ClInclude Include="Vector2D.h" />
     <ClInclude Include="WanderSteering.h" />
