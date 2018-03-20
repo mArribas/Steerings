@@ -10,6 +10,7 @@ WANDER, PURSUE & EVADE
 ![Wander&Pursue&Evade.gif](../master/Resources/Wander&Pursue&Evade.gif)
 
 ALIGN
+
 ![Align.gif](../master/Resources/Align.gif)
 
 PATH FOLLOWING & OBSTACLE AVOIDANCE
