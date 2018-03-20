@@ -1,5 +1,5 @@
 # Steerings
-C++ Steering behaviors
+C++ Steering Behaviors
 
 A simple c++ implementation of some of the most common steering behaviors.
 
