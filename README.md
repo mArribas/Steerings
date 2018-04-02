@@ -1,7 +1,7 @@
 # Steerings
-C++ Steering Behaviors
+C++ Steering Behaviours
 
-A simple c++ implementation of some of the most common steering behaviors.
+A simple c++ implementation of some of the most common steering behaviours.
 
 ### SEEK, FLEE & ARRIVE
 
